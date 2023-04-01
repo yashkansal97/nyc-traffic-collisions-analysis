@@ -9,29 +9,32 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href=https://www.openstreetmap.org/copyright>OpenStreetMap</a> contributors'
 }).addTo(myMap);
 
-
 // Fetch from SQL database
-d3.json('http://localhost:5000/data').then(function(data) {
+// d3.json('http://127.0.0.1:5000/data').then(function(data) {
+d3.json('/data').then(function(data) {
+    d3.json('/boroughs').then(function(boroughs){
     
-    console.log(data);
+        console.log(data);
+        console.log(boroughs);
 
 
-    // Create a new marker cluster group.
-    //var markers = L.markerClusterGroup();
+        // Create a new marker cluster group.
+        //var markers = L.markerClusterGroup();
 
-    // Loop through the data.
-    //data.forEach((response) => {
-        // Set the data location property to a variable.
-        //var location = response.location;
+        // Loop through the data.
+        //data.forEach((response) => {
+            // Set the data location property to a variable.
+            //var location = response.location;
 
-        // // Check for the location property.
-        // if (location) {
-        // // Add a new marker to the cluster group, and bind a popup.
-        // markers.addLayer(L.marker()
-        //     .bindPopup());
-        // }
+            // // Check for the location property.
+            // if (location) {
+            // // Add a new marker to the cluster group, and bind a popup.
+            // markers.addLayer(L.marker()
+            //     .bindPopup());
+            // }
 
     });
+});
 
     // Add our marker cluster layer to the map.
     // myMap.addLayer(markers);
