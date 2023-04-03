@@ -17,12 +17,32 @@ d3.json('/data').then(function(data) {
         console.log(data);
         console.log(boroughs);
 
+        // Create a layer for the boroughs polygons
+        function boroughPolygons(){
+            let features = boroughs['features'];
+            let geojsonLayer = L.geoJSON(features,{
+            'style': {'color': 'yellow'}
+            })
+            geojsonLayer.addTo(myMap)
+        }
+        boroughPolygons()
 
         // Create a new marker cluster group.
-        //var markers = L.markerClusterGroup();
+        function createMarkers(){
+            let markerClusters = L.markerClusterGroup();
+            data.forEach((collision) => {
+                if (collision.latitude != null){
+                    var markers = L.marker([collision.latitude, collision.longitude], {
+                        draggable: false,
+                     });
 
-        // Loop through the data.
-        //data.forEach((response) => {
+                    markers.bindPopup("Test")
+                    markerClusters.addLayer(markers)
+                }
+            })
+            myMap.addLayer(markerClusters);
+        }
+        createMarkers()
             // Set the data location property to a variable.
             //var location = response.location;
 
