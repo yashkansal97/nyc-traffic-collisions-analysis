@@ -37,7 +37,7 @@ d3.json('/data').then(function(data) {
                         draggable: false,
                     });
 
-                    markers.bindPopup(`No. of Persons Injuried: ${collision.number_of_persons_injuried} <br> 
+                    markers.bindPopup(`No. of Persons Injuried: ${collision.number_of_persons_injured} <br> 
                                     No. of Persons Killed: ${collision.number_of_persons_killed} <br> 
                                     Crash Date: ${moment(collision.crash_date).format("dddd, MMMM Do YYYY")} <br> 
                                     Crash Time: ${collision.crash_time}`)
@@ -49,8 +49,75 @@ d3.json('/data').then(function(data) {
         createMarkers()
 
         // Create bar chart
+        let borough_names = ['STATEN ISLAND', 'BROOKLYN', 'QUEENS', 'BRONX', 'MANHATTAN'];
 
+        function boroughCount(borough_name){
+            let count = 0;
 
+            data.forEach((collision) => {
+                if (collision.borough == borough_name){
+                    count += 1;
+                };
+            });
+            return count;
+        };
+
+        let countStaten = boroughCount("STATEN ISLAND");
+        let countBrooklyn = boroughCount("BROOKLYN");
+        let countQueens = boroughCount("QUEENS");
+        let countBronx = boroughCount("BRONX");
+        let countManhattan = boroughCount("MANHATTAN");
+
+        let countArray = [countStaten, countBrooklyn, countQueens, countBronx, countManhattan]
+
+        console.log(countArray)
+
+        var barData = [{
+            type: 'bar',
+            x: borough_names,
+            y: countArray
+          }];
+        var barLayout = {
+            title: "Borough Injuries",
+            yaxis: {title: "Number of People Injured in Feb 2023"}};
+          Plotly.newPlot("bar", barData, barLayout);
+
+        // Create line chart
+        var injuries = []
+        data.forEach((collision) => {
+            if (collision.crash_time && collision.number_of_persons_injured) {
+                injuries.push({
+                    time: collision.crash_time,
+                    ppl_injuried: collision.number_of_persons_injured
+                })
+            }
+        });
+        function injuryCount(injuries, hour) {
+            var count = 0;
+            for (var i = 0; i < injuries.length; i++) {
+                var time = injuries[i].time;
+                if (time == hour){
+                    count += 1;
+                }
+            }
+            return count;
+        };
+        var injuryHourCount = []
+        for (var i = 0; i < 24; i++) {
+            injuryHourCount[i] = injuryCount(injuries, i)
+        }
+        var trace_l =[{
+            x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            y: injuryHourCount,
+            type: "line"
+        }]
+        var line_layout = {
+            title: "Injuries at Each Hour of the Day",
+            xaxis: {title: "Hour"},
+            yaxis: {title: "Number of People Injured"}
+        };
+        // Use Plotly to plot the data in a bar chart
+        Plotly.newPlot("line", trace_l, line_layout);  
     });
 });
 
