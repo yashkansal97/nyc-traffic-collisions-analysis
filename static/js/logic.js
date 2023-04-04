@@ -1,3 +1,4 @@
+
 // Create our map
 var myMap = L.map("map", {
     center: [40.730610, -73.935242],
@@ -21,7 +22,7 @@ d3.json('/data').then(function(data) {
         function boroughPolygons(){
             let features = boroughs['features'];
             let geojsonLayer = L.geoJSON(features,{
-            'style': {'color': 'yellow'}
+            'style': {'color': 'gold'}
             })
             geojsonLayer.addTo(myMap)
         }
@@ -34,29 +35,23 @@ d3.json('/data').then(function(data) {
                 if (collision.latitude != null){
                     var markers = L.marker([collision.latitude, collision.longitude], {
                         draggable: false,
-                     });
+                    });
 
-                    markers.bindPopup("Test")
+                    markers.bindPopup(`No. of Persons Injuried: ${collision.number_of_persons_injuried} <br> 
+                                    No. of Persons Killed: ${collision.number_of_persons_killed} <br> 
+                                    Crash Date: ${moment(collision.crash_date).format("dddd, MMMM Do YYYY")} <br> 
+                                    Crash Time: ${collision.crash_time}`)
                     markerClusters.addLayer(markers)
                 }
             })
             myMap.addLayer(markerClusters);
         }
         createMarkers()
-            // Set the data location property to a variable.
-            //var location = response.location;
 
-            // // Check for the location property.
-            // if (location) {
-            // // Add a new marker to the cluster group, and bind a popup.
-            // markers.addLayer(L.marker()
-            //     .bindPopup());
-            // }
+        // Create bar chart
+
 
     });
 });
-
-    // Add our marker cluster layer to the map.
-    // myMap.addLayer(markers);
 
 
