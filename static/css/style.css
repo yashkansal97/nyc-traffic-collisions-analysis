@@ -73,7 +73,7 @@
 
 #bar {
     position: absolute;
-    right: 0;
+    left: 750px;
     top: 0;
     padding: 2px 0px;
     height: 600px;
