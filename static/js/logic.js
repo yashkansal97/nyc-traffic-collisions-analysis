@@ -10,6 +10,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href=https://www.openstreetmap.org/copyright>OpenStreetMap</a> contributors'
 }).addTo(myMap);
 
+
 // Fetch from SQL database
 // d3.json('http://127.0.0.1:5000/data').then(function(data) {
 d3.json('/data').then(function(data) {
@@ -76,49 +77,89 @@ d3.json('/data').then(function(data) {
             type: 'bar',
             x: borough_names,
             y: countArray
-          }];
+        }];
         var barLayout = {
-            title: "Borough Injuries",
-            yaxis: {title: "Number of People Injured in Feb 2023"}};
-          Plotly.newPlot("bar", barData, barLayout);
+            title: "Borough Collisions- Feb. 2023",
+            yaxis: {title: "Number of Collisions", showgrid: false}, 
+            font: {
+                color: "white"
+            },
+            paper_bgcolor:'rgba(0,0,0,0)',
+            plot_bgcolor:'rgba(0,0,0,0)'
+        };
+        Plotly.newPlot("bar", barData, barLayout);
 
         // Create line chart
-        var injuries = []
-        data.forEach((collision) => {
-            if (collision.crash_time && collision.number_of_persons_injured) {
-                injuries.push({
-                    time: collision.crash_time,
-                    ppl_injuried: collision.number_of_persons_injured
-                })
-            }
-        });
-        function injuryCount(injuries, hour) {
-            var count = 0;
-            for (var i = 0; i < injuries.length; i++) {
-                var time = injuries[i].time;
-                if (time == hour){
-                    count += 1;
+        function injuryCount(data, hour) {
+            var ppl_i = 0;
+            var ppl_k = 0;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].crash_time == hour) {
+                    ppl_i += data[i].number_of_persons_injured;
+                    ppl_k += data[i].number_of_persons_killed;
                 }
             }
-            return count;
+            return [ppl_i, ppl_k];
         };
-        var injuryHourCount = []
+
+        var sum_i = []
+        var sum_k = []
         for (var i = 0; i < 24; i++) {
-            injuryHourCount[i] = injuryCount(injuries, i)
+            sum_i[i] = injuryCount(data, i)[0];
+            sum_k[i] =injuryCount(data, i)[1]
         }
-        var trace_l =[{
-            x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
-            y: injuryHourCount,
-            type: "line"
-        }]
+
+        var trace_i = {
+            x: [...Array(24).keys()],
+            y: sum_i,
+            type: 'line', 
+            name: 'Persons injuried', 
+            marker: {
+                color: "orange"
+            }      
+        }
+
+        var trace_k = {
+            x: [...Array(24).keys()],
+            y: sum_k,
+            type: 'line', 
+            name: 'Persons killed', 
+            marker: {
+                color: "red"
+            }
+        }
+        data = [trace_i, trace_k]
+
         var line_layout = {
-            title: "Injuries at Each Hour of the Day",
-            xaxis: {title: "Hour"},
-            yaxis: {title: "Number of People Injured"}
+            title: "Injuries/Kills at Each Hour of the Day - Feb. 2023",
+            xaxis: {
+                title: "Hour", 
+                range: [0, 24],
+                showgrid: false,
+                zeroline: false
+            }, 
+            yaxis: {
+                title: "Number of Persons", 
+                autorange: true,
+                showgrid: false
+            },
+            font: {
+                color: "white"
+            },
+            paper_bgcolor:'rgba(0,0,0,0)',
+            plot_bgcolor:'rgba(0,0,0,0)'
         };
         // Use Plotly to plot the data in a bar chart
-        Plotly.newPlot("line", trace_l, line_layout);  
+        Plotly.newPlot("line", data, line_layout);  
     });
 });
 
+function zoomMap(event, userInput) {
+    console.log(userInput);
+    // update map configuration object with new center and zoom values
+    let latLng=userInput.split(', ')
+    myMap.setView([parseFloat(latLng[0]), parseFloat(latLng[1])], 12);
 
+    // toggle "active" class on element that triggered event
+    event.currentTarget.classList.add("active");
+}
