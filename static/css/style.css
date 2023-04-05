@@ -8,13 +8,13 @@
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
-    background-color: rgb(48, 48, 48);
+    background-color: rgb(71, 71, 71);
     color: whitesmoke;
     float: center;
     border: none;
     padding: 12px 30px;
     transition: 0.3s;
-    border-radius: 12px 12px 0px 0px;
+    border-radius: 12px 12px;
 }
 
 /* Change background color of buttons on hover */
@@ -29,12 +29,11 @@
     color: rgb(255, 215, 0)
 }
 
-/*Style the tab content */
 .tabcontent {
     display: none;
     border-radius: 0 0 6px 6px;
-    height: 600px; 
-    position: relative; 
+    height: 500px;
+    position: relative;
 }
 
 /*Style title */
@@ -53,4 +52,40 @@
     right: 0;
     top: 0;
     padding: 37px 20px 2px 20px;
+    text-align: right;
+}
+
+#userInput {
+    margin-top: 15px;
+    color: rgb(30, 30, 30)
+}
+
+#map {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 20px 0px 0px 5px;
+    margin-top: 10px;
+    height: 600px;
+    width: 700px;
+    border-radius: 6px 6px;
+}
+
+#bar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 2px 0px;
+    height: 600px;
+    width: 550px;
+}
+
+#line {
+    position: absolute;
+    left: 20;
+    top: 50;
+    margin-left: 20px;
+    padding: 2px 0px;
+    height: 600px;
+    width: 1200px;
 }
