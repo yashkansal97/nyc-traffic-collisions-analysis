@@ -158,7 +158,7 @@ function zoomMap(event, userInput) {
     console.log(userInput);
     // update map configuration object with new center and zoom values
     let latLng=userInput.split(', ')
-    myMap.setView([parseFloat(latLng[0]), parseFloat(latLng[1])], 12);
+    myMap.setView([parseFloat(latLng[0]), parseFloat(latLng[1])], 20);
 
     // toggle "active" class on element that triggered event
     event.currentTarget.classList.add("active");
