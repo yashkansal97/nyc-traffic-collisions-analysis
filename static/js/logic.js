@@ -113,7 +113,7 @@ d3.json('/data').then(function(data) {
             x: [...Array(24).keys()],
             y: sum_i,
             type: 'line', 
-            name: 'Persons injuried', 
+            name: 'Persons injured', 
             marker: {
                 color: "orange"
             }      
